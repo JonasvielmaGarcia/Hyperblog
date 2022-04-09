@@ -1,4 +1,4 @@
-comandos de git aprendidos en esta clase:
+Comandos para iniciar en Git clase:
 
 git init: lo usamos para determinar la carpeta en la que vamos a trabajar.
 
