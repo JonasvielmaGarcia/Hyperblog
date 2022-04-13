@@ -9,6 +9,17 @@ body
  
 }
 
+#cabecera
+{
+    background-color: aqua;
+    color: pink;
+    font-size: 22px;
+}
+
+#cabecera #cabecera_autor{
+    background-color: blueviolet;
+}
+
 #container
 {
     width: 70%;
