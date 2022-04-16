@@ -12,13 +12,14 @@ body
 
 #cabecera
 {
-    background-color: aqua;
-    color: pink;
-    font-size: 22px;
+    background-color: green;
+    color: white; 
+    font-size: 30px;
 }
 
 #cabecera #cabecera_autor{
-    background-color: blueviolet;
+    background-color: turquoise; 
+    color: green; 
 }
 
 #container
