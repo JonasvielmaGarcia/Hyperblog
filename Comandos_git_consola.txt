@@ -1,0 +1,118 @@
+
+## Rebase 
+---eescribe la historia del repositorio, cambia la historia de donde comenzó la rama y solo debe ser usado de manera local..
+El comando rebase es una mala práctica, nunca se debe usar, pero para efectos del curso te lo vamos a enseñar para que hagas .
+tus propios experimentos. 
+Con rebase puedes recoger todos los cambios confirmados en una rama y ponerlos sobre otra. Recordar siempre rebase a la rama, despues de guardar
+cambios se hace rebase al master.
+
+# Cambiamos a la rama que queremos traer los cambios
+git checkout experiment
+# Aplicamos rebase para traer los cambios de la rama que queremos 
+git rebase master
+
+
+##Stash
+
+git stash : Guarda el trabajo actual de manera temporal. (Archivos modificados o eliminados) -Sirve cuando estoy en pruebas y no quiero hacer 
+#commits, sirve de prueba y listo. Es como un temporal.
+
+git stash -u : Crea un stash con todos los archivos. (Añadiendo los creados Untracked)
+git stash save “mensaje” : Crea un stash con el mensaje especificado.
+git stash list : Permite visualizar todos los stash existentes.
+git stash clear : Elimina todos los stash existentes.
+git stash drop : Elimina el stash más reciente. El que tiene num_stash=0.
+git stash drop stash@{num_stash} : Elimina un stash específico.
+git stash apply : Aplica el stash más reciente. El que tiene num_stash=0.
+git stash apply stash@{num_stash} : Aplica los cambios de un stash específico.
+git stash pop : Aplica el stash más reciente y lo elimina. El que tiene num_stash=0.
+git stash pop stash@{num_stash} : Aplica los cambios de un stash específico y elimina lo stash.
+git stash branch nombre_de_rama : Crea una rama y aplica el stash mas reciente.
+git stash branch nombre_de_rama stash@{num_stash} : Crea una rama y aplica el stash especificado.
+
+Consideraciones:
+
+El cambio más reciente (al crear un stash) SIEMPRE recibe el valor 0 y los que estaban antes aumentan su valor.
+Al crear un stash tomará los archivos que han sido modificados y eliminados. Para que tome un archivo creado es necesario agregarlo al Staging Area con git add [nombre_archivo] con la intención de que git tenga un seguimiento de ese archivo, o también utilizando el comando git stash -u.
+Al aplicar un stash este no se elimina, es buena práctica eliminarlo.
+
+---------
+
+#Borrar archivos que por error terminé creando.
+A veces creamos archivos cuando estamos realizando nuestro proyecto que realmente no forman parte de nuestro directorio de trabajo, 
+que no se deberían agregar y lo sabemos.
+
+Para saber qué archivos vamos a borrar tecleamos git clean --dry-run
+Para borrar todos los archivos listados (que no son carpetas) tecleamos git clean -f
+
+
+## Cherry-pick
+Este comando se trae un commit viejo (O sea, los cambios específicos de ese commit y los pega la rama actual -el usuario puede seleccionar el commit desde el hisotorial)
+
+Existe un mundo alternativo en el cual vamos avanzando en una rama pero necesitamos en master uno de esos avances de la rama, 
+para eso utilizamos el comando git cherry-pick IDCommit.
+
+cherry-pick es una mala práctica porque significa que estamos reconstruyendo la historia, 
+usa cherry-pick con sabiduría. Si no sabes lo que estás haciendo ten mucho cuidado.
+
+# Ahora me piden traer el primer commit de readme-mejorado
+# copio el codigo del commit que quiero traer desde la rama en la que realicé los cambios.
+$ git log --oneline
+
+# cambio a master y hago el cherry-pick
+$ git checkout master
+$ git cherry-pick [codigo del commit]
+
+# como lo que me estoy trayendo es un commit, no hay que hacer commit en master con los cambios, ya estan hechos
+$ git status
+$ git pull origin master
+$ git push origin master
+
+
+## Comandos para casos de emergencia:
+
+ veces hacemos un commit, pero resulta que no queríamos mandarlo porque faltaba algo más. 
+ Utilizamos git commit --amend, amend en inglés es remendar y lo que hará es que los cambios que hicimos nos los agregará 
+ al commit anterior. --También podría modificar el mensaje que había dejado en el commit anterior.
+
+ IMPORTANTE: cuando cometes estos errores, tienes que mejorar lo que faltaba y hacerle luego git add {nombre del archivo} luego es que 
+ deber hacer el amend para que se guarde todo en el commit anterior (justamente en este fue donde te faltó agregar el cambio)
+
+## ¿Qué pasa cuando todo se rompe y no sabemos qué está pasando? Con git reset HashDelHEAD nos devolveremos al estado en que el proyecto funcionaba.
+
+git reset --soft HashDelHEAD te mantiene lo que tengas en staging ahí.
+git reset --hard HashDelHEAD resetea absolutamente todo incluyendo lo que tengas en staging.
+git reset es una mala práctica, no deberías usarlo en ningún momento; debe ser nuestro último recurso.
+
+CONSIDERAR: Git nunca olvida, git reflog
+
+
+##A medida que nuestro proyecto se hace grande vamos a querer buscar ciertas cosas.
+
+Por ejemplo: ¿cuántas veces en nuestro proyecto utilizamos la palabra color?
+
+Para buscar utilizamos el comando git grep color y nos buscará en todo el proyecto los archivos en donde está la palabra color.
+
+Con git grep -n color nos saldrá un output el cual nos dirá en qué línea está lo que estamos buscando.
+Con git grep -c color nos saldrá un output el cual nos dirá cuántas veces se repite esa palabra y en qué archivo.
+Si queremos buscar cuántas veces utilizamos un atributo de HTML lo hacemos con git grep -c "<p>".
+
+
+
+## Otros comandos para stats 
+
+git shortlog -sn = muestra cuantos commit han hecho cada miembros del equipo.
+git shortlog -sn --all = muestra cuantos commit han hecho cada miembros del equipo hasta los que han sido eliminado
+git shortlog -sn --all --no-merge = muestra cuantos commit han hecho cada miembros quitando los eliminados sin los merges
+git blame ARCHIVO = muestra quien hizo cada cosa linea por linea
+git COMANDO --help = muestra como funciona el comando.
+git blame ARCHIVO -Llinea_inicial,linea_final= muestra quien hizo cada cosa linea por linea indicándole desde que linea ver ejemplo -L35,50
+**git branch -r **= se muestran todas las ramas remotas
+git branch -a = se muestran todas las ramas tanto locales como remotas
+
+
+## Para crear un alias desde Git
+
+Ejemplo crear un alias para stadísticas
+
+git config --global alias.stats “shortlog -sn --all --no-merges”
